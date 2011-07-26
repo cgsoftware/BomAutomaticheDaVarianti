@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+		<record model="ir.ui.view" id="product_bom_template">
+			<field name="name">product.bom.template</field>
+			<field name="model">product.template</field>
+			<field name="inherit_id" ref="product.product_template_form_view"/>
+			<field name="arch" type="xml">
+				<notebook position="inside">
+					<page string="Distinta Materiali/Produzione">
+						<group colspan="4" col="4" name="production">
+							<separator string="Basi Di Calcolo" colspan="4"/>
+							<field name="production_peso" size="10"/>
+
+						</group>
+						<separator string="Distinat Base Comune Agli Articoli del Template" colspan="4"/>						
+						<field name="bom_template_ids" nolabel="1" mode="tree,form"
+							string="Elenco Materie Prime">
+							<tree editable="top">
+								<field name="product_id" size="150"/>
+								<field name="product_qty" size="10"/>
+							</tree>
+							<form>
+								<field name="product_id" size="150"/>
+								<field name="product_qty" size="10"/>
+							</form>
+						</field>
+					</page>
+				</notebook>
+
+			</field>
+		</record>
+
+		<record model="ir.ui.view" id="bom_variant_form">
+			<field name="name">bom.variant.form</field>
+			<field name="model">bom.variant</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Materie Prime da inserire in Distinta a Partire dalle Varianti">
+					<group col="6" colspan="4">
+						<field name="name"/>
+						<newline/>
+						<field name="template_material_id" />
+						<field name="template_material_qty"/>
+					</group>     
+					<newline/>
+					<separator string="Righe Materie Prime" colspan="4"/>
+					<field name="righe_materie_prime" nolabel="1" mode="tree,form" string="Righe Quantità Materie Prime">
+						<tree editable="top"  string="Materie Prime">
+							<field name="product_material_id" size='150' />
+							<field name='tipo_calcolo' size='50' />
+							<field name="material_variant" domain="[('product_tmpl_id','=',template_material_id)]" size='10'/>
+							<field name="material_qty" />	                				
+						</tree>
+						<form>
+							<field name="product_material_id" size='150' />
+							<field name="material_variant" domain="[('product_tmpl_id','=',template_material_id)]" size='10'/>
+							<field name='tipo_calcolo' size='50' />
+							<field name="material_qty" />	                   				
+						</form>
+					</field>                    
+					
+					</form>
+
+				
+			</field>
+		</record>
+		
+		<record model="ir.ui.view" id="bom_variant_tree">
+			<field name="name">bom.variant.tree</field>
+			<field name="model">bom.variant</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Materie Prime da inserire in Distinta a Partire dalle Varianti">
+
+						<field name="name"/>
+						<field name="template_material_id" />
+						<field name="template_material_qty"/>
+					     
+				</tree>
+				
+				
+			</field>
+		</record>
+		
+		<record id="action_bom_variant" model="ir.actions.act_window">
+			<field name="name">Distinta Base Varianti</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">bom.variant</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+		
+
+		
+		<menuitem action="action_bom_variant" id="menu_bom_variant_tree" parent="product_variant_multi.menu_variant_dimension" icon="STOCK_JUSTIFY_FILL"/>
+		
+		
+    <record id="BomAutomaticheDaVarianti.product_product_form_view4" model="ir.ui.view">
+      <field name="name">BomAutomaticheDaVarianti.product.product.form4</field>
+      <field name="model">product.product</field>
+      <field name="type">form</field>
+      <field name="inherit_id" ref="product.product_normal_form_view" />
+      <field name="arch" type="xml">
+        <field name="weight_net" position="after">
+          <newline/>
+          <field name="production_conai_peso"  />
+          <newline/>
+        </field>
+      </field>
+    </record>    
+
+
+
+
+
+	</data>
+</openerp>
