@@ -1,4 +1,4 @@
 "id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
-"access_bom_template","bom.template","model_bom_template",,1,1,1,1
+"access_bom_template","bom_template","model_bom_template",,1,1,1,1
 "access_bom_variant","bom.variant","model_bom_variant",,1,1,1,1
 "access_bom_variant_line","bom.variant.line","model_bom_variant_line",,1,1,1,1

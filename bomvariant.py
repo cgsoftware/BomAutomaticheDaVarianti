@@ -20,6 +20,7 @@
 #
 ##############################################################################
 
+
 from osv import fields, osv
 from osv.osv import except_osv
 import time
@@ -82,6 +83,7 @@ class product_template(osv.osv):
     _columns = {
         'production_peso': fields.float('Peso di Produzione', required=False, digits=(11, 5)),
         'bom_template_ids':fields.one2many('bom.template', 'template_id', 'Distinta Materie Prime'),
+        'pz_x_collo': fields.integer('Pezzi Per Collo', required=False),
  
     }
     
@@ -92,6 +94,7 @@ class product_product(osv.osv):
 
     _columns = {
         'production_conai_peso': fields.float('Peso di Produzione/conai', required=False, digits=(11, 5)),
+        'pz_x_collo': fields.integer('Pezzi Per Collo', required=False),
          }
     
 product_product() 
