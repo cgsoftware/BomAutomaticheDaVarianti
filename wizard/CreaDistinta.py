@@ -37,7 +37,7 @@ class crea_distinta(osv.osv_memory):
                 }
     
     def onchange_articolo(self, cr, uid, ids, articolo_id):
-        import pdb;pdb.set_trace()
+        #import pdb;pdb.set_trace()
         v = {}
         righe_materiali = []
         vals = {
