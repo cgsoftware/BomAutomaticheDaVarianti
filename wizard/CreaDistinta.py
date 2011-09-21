@@ -35,7 +35,6 @@ class crea_distinta(osv.osv_memory):
          'peso_prod_conai': fields.float('Peso di Produzione/conai', required=False, digits=(11, 5)),
          'righe_materiali':fields.one2many('crea.distinta.righe', 'testa', 'Righe Varianti Materie Prime'),
                 }
-    
     def onchange_articolo(self, cr, uid, ids, articolo_id):
         #import pdb;pdb.set_trace()
         v = {}
@@ -51,10 +50,10 @@ class crea_distinta(osv.osv_memory):
                 # c'è scritto qualcosa nel flag obbligatorio
                 if 'D' in riga_var.dimension_id.flag_obbl:
                     # è obbligatorio che si fermi e chieda la materia prima per questa variante
-                    righe_materiali.append = {
+                    righe_materiali.append ({
                                               'variant_dimension_id':riga_var.dimension_id.id,
-                                              'variant_value_id':riga_var.id                                              
-                                            }
+                                              'variant_value_id':riga_var.id,
+                                            })
         if product.production_conai_peso:
             qta = product.production_conai_peso
         else:
@@ -194,8 +193,8 @@ class crea_distinta(osv.osv_memory):
                                 ids_riga = self.scrive_componente_distinta(cr, uid, righe_comp, rigamat, testa_id, context=None)
                             else:
                                 # la cosa è + complessa qui bisogna associare un template di materia prima con il suo colore 
-                                #da sviluppare in un secondo momento dopo che ci siamo chiariti le idee
-                                pass 
+                                #
+                               
                                 if riga_materie_prime.material_variant:
                                     righe_comp = False
                                     rigamat = {
@@ -216,14 +215,46 @@ class crea_distinta(osv.osv_memory):
                 ids_riga = self.scrive_componente_distinta(cr, uid, righe_comp, rigamat, testa_id, context=None)                       
 
 
-        return{}
+        context.update({'product_id':articolo_id.id})
+        context.update({'active_id':articolo_id.id})
+        context.update({'active_ids':[articolo_id.id]})
+        return {
+            'name': _('Prodotto'),
+            'view_type': 'form',
+            'view_mode': 'form,tree',
+            'res_model': 'product.product',
+            'res_id':context['product_id'],
+            'view_id': False,
+            'context': context,
+            'type': 'ir.actions.act_window',
+         }
 
-
+    def view_init(self, cr, uid, fields_list, context=None):
+        #import pdb;pdb.set_trace()
+        res = super(crea_distinta, self).view_init(cr, uid, fields_list, context=context)
+        # IN ACTIVE_MOVE DEVE METTERE IL CODICE ARTICOLO E QUINDI SETTARLO IN Articolo_id
+        #if not context.get('active_ids', []):
+         #   raise osv.except_osv(_('Invalid action !'), _('Selezionare l articolo !'))
+        return res
+    
+    
+    def  default_get(self, cr, uid, fields, context=None):
+        #import pdb;pdb.set_trace()
+        active_ids = context and context.get('active_ids', [])
+        res = {}
+        ids = []
+        if active_ids:
+            for product in self.pool.get('product.product').browse(cr, uid, active_ids, context=context):
+                res = self.onchange_articolo(cr, uid, ids, product.id)
+                
+        
+        return {'articolo_id':product.id}
+    
 
 crea_distinta()
 
 class crea_distinta_righe(osv.osv_memory):
-        _name = 'crea.distinta'
+        _name = 'crea.distinta.righe'
         _description = 'Genera una distinta base partendo daglle varianti'
         _columns = {
                     'testa':fields.many2one('crea.distinta', 'Testa', required=True, ondelete='cascade', select=True,),
@@ -233,6 +264,11 @@ class crea_distinta_righe(osv.osv_memory):
                     'product_qty': fields.float('Quantita', required=False, digits=(11, 5)),
   
                     }
+        
+        _defaults = {  
+        'product_qty': 1,
+        }
+        
 
     
 crea_distinta_righe()    
