@@ -168,9 +168,15 @@ class crea_distinta(osv.osv_memory):
                 ids_riga = self.scrive_componente_distinta(cr, uid, righe_comp, rigamat, testa_id, context=None)
                 # cicla sulle varianti
             # import pdb;pdb.set_trace()
-            for variante in articolo_id.dimension_value_ids:   
-                    cerca = [('name', '=', variante.dimension_id.name.strip() + "-" + variante.name.strip())]
+        for variante in articolo_id.dimension_value_ids:
+                    #import pdb;pdb.set_trace()
+                    # CERCA LE VARIANTI LEGATE AL TEMPALTE PRIMA E POI QUELLE INDIPENDENTI
+                    cerca = [('name', '=', variante.dimension_id.name.strip() + "-" + variante.name.strip()),
+                              ('template_material_id', '=', articolo_id.product_tmpl_id.id)]
                     variant_comp_ids = self.pool.get('bom.variant').search(cr, uid, cerca)
+                    if not variant_comp_ids:                   
+                        cerca = [('name', '=', variante.dimension_id.name.strip() + "-" + variante.name.strip())]
+                        variant_comp_ids = self.pool.get('bom.variant').search(cr, uid, cerca)
                     if variant_comp_ids:
                         # ci sono delle righe di componenti definite per la varaiante
                         testa_variant_comp = self.pool.get('bom.variant').browse(cr, uid, variant_comp_ids)[0]
@@ -194,7 +200,9 @@ class crea_distinta(osv.osv_memory):
                             else:
                                 # la cosa è + complessa qui bisogna associare un template di materia prima con il suo colore 
                                 #
-                               
+                                # IL 26/09/2011 CI SI È RESI CONTO CHE QUESTA CASISTICA NON SERVIRÀ 
+                                # IN COMPENSO VA PRIMA CERCATO COME RICERCA BASE SULLA TESTATA DELLA DEFINIZIONE DELLE MATERIE
+                                # PRIME PER VARIANTE IL LEGAME CODVAR+CODVAL+TEMPLATE 
                                 if riga_materie_prime.material_variant:
                                     righe_comp = False
                                     rigamat = {
@@ -205,7 +213,7 @@ class crea_distinta(osv.osv_memory):
                                     righe_comp = self.pool.get('mrp.bom').search(cr, uid, cerca)
                                     ids_riga = self.scrive_componente_distinta(cr, uid, righe_comp, rigamat, testa_id, context=None)
             # ORA CICLA SULLE RIGHE MATERIE PRIME DEFINITE A MANO
-            for rigamat1 in   param.righe_materiali:
+        for rigamat1 in   param.righe_materiali:
                 rigamat = {
                            'product_id':rigamat1.materia_id.id,
                             'product_qty':rigamat1.product_qty,
