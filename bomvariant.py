@@ -81,10 +81,11 @@ class product_template(osv.osv):
     _inherit = "product.template"
 
     _columns = {
+                
         'production_peso': fields.float('Peso di Produzione', required=False, digits=(11, 5)),
         'bom_template_ids':fields.one2many('bom.template', 'template_id', 'Distinta Materie Prime'),
         'pz_x_collo': fields.integer('Pezzi Per Collo', required=False),
- 
+        'routing_id': fields.many2one('mrp.routing', 'Routing', reqired=True, help="TLinea di Produzione"),
     }
     
 product_template()    

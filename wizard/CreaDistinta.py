@@ -82,6 +82,7 @@ class crea_distinta(osv.osv_memory):
                                'product_id':articolo_id.id,
                                'bom_id':0,
                                'product_uom': articolo_id.uom_id.id,
+                               'routing_id':articolo_id.product_tmpl_id.routing_id.id,
                                }
             testa_id = self.pool.get('mrp.bom').create(cr, uid, testa_distinta)
 

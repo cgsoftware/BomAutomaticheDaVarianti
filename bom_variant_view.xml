@@ -13,6 +13,7 @@
 							<separator string="Basi Di Calcolo" colspan="4"/>
 							<field name="production_peso" size="10"/>
 							<field name="pz_x_collo" size="10"/>
+							<field name="routing_id" size="10"/>
 
 						</group>
 						<separator string="Distinat Base Comune Agli Articoli del Template" colspan="4"/>						
