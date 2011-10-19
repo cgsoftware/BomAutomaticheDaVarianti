@@ -46,6 +46,7 @@ class crea_distinta(osv.osv_memory):
         product = self.pool.get('product.product').browse(cr, uid, [articolo_id])[0]
         varianti_product = product.dimension_value_ids
         for riga_var in varianti_product:
+            #import pdb;pdb.set_trace()
             if riga_var.dimension_id.flag_obbl:
                 # c'è scritto qualcosa nel flag obbligatorio
                 if 'D' in riga_var.dimension_id.flag_obbl:
@@ -54,6 +55,7 @@ class crea_distinta(osv.osv_memory):
                                               'variant_dimension_id':riga_var.dimension_id.id,
                                               'variant_value_id':riga_var.id,
                                             })
+        #import pdb;pdb.set_trace()
         if product.production_conai_peso:
             qta = product.production_conai_peso
         else:
@@ -176,7 +178,8 @@ class crea_distinta(osv.osv_memory):
                               ('template_material_id', '=', articolo_id.product_tmpl_id.id)]
                     variant_comp_ids = self.pool.get('bom.variant').search(cr, uid, cerca)
                     if not variant_comp_ids:                   
-                        cerca = [('name', '=', variante.dimension_id.name.strip() + "-" + variante.name.strip())]
+                        cerca = [('name', '=', variante.dimension_id.name.strip() + "-" + variante.name.strip()),
+                                  ('template_material_id', '=', None)]
                         variant_comp_ids = self.pool.get('bom.variant').search(cr, uid, cerca)
                     if variant_comp_ids:
                         # ci sono delle righe di componenti definite per la varaiante
