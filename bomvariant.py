@@ -107,7 +107,7 @@ class mrp_bom(osv.osv):
     _inherit = 'mrp.bom'
     _columns = {
 
-        'product_qty': fields.float('Product Qty', digits=(11, 5), required=True),
-        'product_uos_qty': fields.float('Product UOS Qty', digits=(11, 5)),
+        'product_qty': fields.float('Product Qty',  digits_compute=dp.get_precision('Mrp Qty'), required=True),
+        'product_uos_qty': fields.float('Product UOS Qty',  digits_compute=dp.get_precision('Mrp Qty')),
             }
 mrp_bom()
